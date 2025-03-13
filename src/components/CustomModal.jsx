@@ -6,8 +6,9 @@ import {
   DialogActions,
   IconButton,
   useMediaQuery,
+  useTheme,
+  styled,
 } from "@mui/material";
-import { styled, useTheme } from "@mui/material/styles";
 import { Close } from "@mui/icons-material";
 
 const CustomDialog = styled(Dialog)(({ theme }) => ({

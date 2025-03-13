@@ -1,9 +1,9 @@
 import { useState, useMemo, useEffect } from "react";
 import {
-  ThemeProvider as MUIThemeProvider,
   createTheme,
-} from "@mui/material/styles";
-import { CssBaseline } from "@mui/material";
+  CssBaseline,
+  ThemeProvider as MUIThemeProvider,
+} from "@mui/material";
 import Cookies from "js-cookie";
 import { ColorModeContext } from "../context/ColorModeContext";
 import { trTR } from "@mui/x-data-grid/locales";

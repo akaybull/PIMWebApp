@@ -1,5 +1,4 @@
-import { IconButton, Tooltip } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { IconButton, Tooltip, useTheme } from "@mui/material";
 import { DarkMode, LightMode } from "@mui/icons-material";
 import { useContext } from "react";
 import { ColorModeContext } from "../context/ColorModeContext";

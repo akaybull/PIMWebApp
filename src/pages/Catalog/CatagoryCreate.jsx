@@ -8,13 +8,12 @@ import {
   Tabs,
   TextField,
   Typography,
+  SvgIcon,
+  useTheme,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useTheme } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import React from "react";
-import SvgIcon from "@mui/material/SvgIcon";
-import { Label } from "@mui/icons-material";
+import { ExpandMore, Label } from "@mui/icons-material";
 
 // Bayrak Bileşenleri
 const UKFlag = (props) => (
@@ -103,7 +102,7 @@ const CategoryCreate = () => {
     >
       <Accordion defaultExpanded>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={<ExpandMore />}
           aria-controls="panel1-content"
           id="panel1-header"
         >

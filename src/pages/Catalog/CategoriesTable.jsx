@@ -1,6 +1,4 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import {
   DataGrid,
   GridToolbarColumnsButton,
@@ -8,11 +6,10 @@ import {
   GridToolbarDensitySelector,
   GridToolbarFilterButton,
 } from "@mui/x-data-grid";
-import SaveIcon from "@mui/icons-material/Save";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import * as XLSX from "xlsx";
 import { CatalogData } from "./CatalogData";
+import { Delete, FileDownload, Save } from "@mui/icons-material";
+import { Box, Button } from "@mui/material";
 
 export default function CategoriesTable() {
   const [rows, setRows] = React.useState(CatalogData);
@@ -54,7 +51,7 @@ export default function CategoriesTable() {
       headerName: "Kaydet",
       width: 100,
       renderCell: (params) => (
-        <SaveIcon
+        <Save
           onClick={() => handleSave(params.id)}
           style={{ cursor: "pointer" }}
         />
@@ -65,7 +62,7 @@ export default function CategoriesTable() {
       headerName: "Sil",
       width: 100,
       renderCell: (params) => (
-        <DeleteIcon
+        <Delete
           onClick={() => handleDelete(params.id)}
           style={{ cursor: "pointer" }}
         />
@@ -81,7 +78,7 @@ export default function CategoriesTable() {
       <Button
         variant="text"
         color="primary"
-        startIcon={<FileDownloadIcon />}
+        startIcon={<FileDownload />}
         onClick={handleExportToExcel}
       >
         Excel'e Aktar
