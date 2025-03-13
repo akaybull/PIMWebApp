@@ -14,7 +14,41 @@ import {
 import PropTypes from "prop-types";
 import React from "react";
 import { ExpandMore, Label } from "@mui/icons-material";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
+const modules = {
+  toolbar: [
+    [{ font: [] }],
+    [{ header: [1, 2, 3, 4, 5, false] }],
+    ["bold", "italic", "underline", "strike"],
+    [{ color: [] }, { background: [] }],
+    [{ align: [] }],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["blockquote", "code-block"],
+    ["link", "image", "video"],
+    ["clean"],
+  ],
+};
+
+const formats = [
+  "font",
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "color",
+  "background",
+  "align",
+  "list",
+  "bullet",
+  "blockquote",
+  "code-block",
+  "link",
+  "image",
+  "video",
+];
 // Bayrak Bileşenleri
 const UKFlag = (props) => (
   <SvgIcon {...props}>
@@ -53,22 +87,22 @@ const RUFlag = (props) => (
   </SvgIcon>
 );
 
-// TabPanel Bileşeni
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
   return (
-    <Typography
+    <Box
       component="div"
       role="tabpanel"
-      hidden={value !== index}
       id={`action-tabpanel-${index}`}
       aria-labelledby={`action-tab-${index}`}
+      sx={{ display: value === index ? "block" : "none", p: 3, height: "auto" }}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3, height: "45px" }}>{children}</Box>}
-    </Typography>
+      {children}
+    </Box>
   );
 }
+
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
@@ -85,10 +119,11 @@ function a11yProps(index) {
 // Ana Bileşen
 const CategoryCreate = () => {
   const theme = useTheme();
-  const [editorValue, setEditorValue] = React.useState("");
-
-  const handleChange = (value) => {
-    setEditorValue(value); // Değerin doğru şekilde güncellendiğinden emin olun
+  const isDarkMode = theme.palette.mode === "dark"; // Tema kontrolü
+  const [editorValue, setEditorValue] = React.useState("Açıklama Yazınız");
+  console.log("editorValue", editorValue);
+  const handleEditorValueChange = (value) => {
+    setEditorValue(value);
   };
   const [value, setValue] = React.useState(0);
 
@@ -98,7 +133,12 @@ const CategoryCreate = () => {
 
   return (
     <Box
-      sx={{ bgcolor: "background.paper", position: "relative", minHeight: 300 }}
+      sx={{
+        bgcolor: "background.paper",
+        position: "relative",
+        minHeight: 500,
+        borderRadius: "8px",
+      }}
     >
       <Accordion defaultExpanded>
         <AccordionSummary
@@ -119,7 +159,11 @@ const CategoryCreate = () => {
               variant="fullWidth"
               aria-label="action tabs example"
             >
-              <Tab label="Standart" {...a11yProps(0)} />
+              <Tab
+                label="Standart"
+                {...a11yProps(0)}
+                sx={{ minHeight: 50, fontSize: 14 }}
+              />
               <Tab
                 label="EN"
                 iconPosition="start"
@@ -151,15 +195,22 @@ const CategoryCreate = () => {
             </Tabs>
           </AppBar>
 
-          <TabPanel value={value} index={0} dir={theme.direction}>
-            <TextField
-              variant="outlined"
-              size="small"
-              label="Kategori Adı"
-              className="w-1/2"
-            />
-            <Label>Açıklama</Label>
-            {/* <ReactQuill value={editorValue || ""} onChange={handleChange} /> */}
+          <TabPanel value={value} index={0}>
+            <div className="flex flex-col gap-2">
+              <TextField
+                variant="outlined"
+                size="small"
+                label="Kategori Adı"
+                className="w-full"
+              />
+              <ReactQuill
+                value={editorValue}
+                onChange={setEditorValue}
+                modules={modules}
+                formats={formats}
+                className={isDarkMode ? "quill-dark" : ""}
+              />
+            </div>
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
             EN İçeriği

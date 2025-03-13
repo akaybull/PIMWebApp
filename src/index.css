@@ -1,3 +1,60 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Dark Mode Toolbar */
+.quill-dark .ql-toolbar {
+  background-color: #222;
+  border-color: #444;
+  color: #ddd;
+}
+
+/* Dark Mode Container */
+.quill-dark .ql-container {
+  background-color: #333;
+  color: #ddd;
+  border-color: #444;
+}
+
+/* Dark Mode Editor */
+.quill-dark .ql-editor {
+  background-color: #333;
+  color: #ddd;
+}
+
+/* Dark Mode Dropdowns */
+.quill-dark .ql-picker {
+  color: #ddd !important;
+}
+.quill-dark .ql-picker-options {
+  background-color: #222 !important;
+  border-color: #444 !important;
+}
+.quill-dark .ql-stroke {
+  stroke: #ddd !important;
+}
+.quill-dark .ql-fill {
+  fill: #ddd !important;
+}
+
+/* 🔥 Aktif (Seçilmiş) Olan Butonlar */
+.quill-dark .ql-toolbar button.ql-active {
+  background-color: #555 !important; /* Daha belirgin hale getir */
+  color: #fff !important;
+  border-radius: 4px;
+}
+
+/* 🔥 Aktif Olan Liste ve Hizalama Seçenekleri */
+.quill-dark .ql-toolbar .ql-picker-item.ql-selected,
+.quill-dark .ql-toolbar .ql-picker.ql-expanded {
+  background-color: #444 !important;
+  color: #fff !important;
+}
+
+/* 🔥 Aktif Olan İkonların Vurgulanması */
+.quill-dark .ql-toolbar button.ql-active .ql-stroke {
+  stroke: #fff !important;
+}
+.quill-dark .ql-toolbar button.ql-active .ql-fill {
+  fill: #fff !important;
+}
