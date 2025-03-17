@@ -68,7 +68,7 @@ const Categories = () => {
 
   return (
     <PageLayout>
-      <div className="flex justify-between items-center flex-wrap">
+      <div className="flex h-16 justify-between items-center flex-wrap">
         <Typography variant="h5">KATEGORİLER</Typography>
         <div className="flex gap-2 flex-wrap">
           <Button

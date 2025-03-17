@@ -21,12 +21,13 @@ import {
   ProductionQuantityLimits,
   Category,
   Label,
+  BrandingWatermark,
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/features/authSlice";
 import ThemeToggle from "./ThemeToggle";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Cookies from "js-cookie";
 
 const drawerWidth = 240;
@@ -40,7 +41,7 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(() => {
     return Cookies.get("isCollapsed") === "true";
   });
-  const [openSubmenu, setOpenSubmenu] = useState();
+  const [openSubmenu, setOpenSubmenu] = useState("/catalog");
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -67,18 +68,23 @@ const Sidebar = () => {
       icon: <Category />,
       path: "/catalog",
       mainPath: "/catalog",
-
       submenu: [
-        {
-          text: "Ürünler",
-          icon: <ProductionQuantityLimits />,
-          path: "/products",
-          mainPath: "/catalog",
-        },
         {
           text: "Kategori",
           icon: <Category />,
           path: "/categories",
+          mainPath: "/catalog",
+        },
+        {
+          text: "Markalar",
+          icon: <BrandingWatermark />,
+          path: "/brands",
+          mainPath: "/catalog",
+        },
+        {
+          text: "Ürünler",
+          icon: <ProductionQuantityLimits />,
+          path: "/products",
           mainPath: "/catalog",
         },
         {
@@ -90,28 +96,6 @@ const Sidebar = () => {
       ],
     },
   ];
-
-  useEffect(() => {
-    let found = false;
-    menuItems.forEach((item) => {
-      if (item.path === location.pathname) {
-        setOpenSubmenu(item.path);
-        found = true;
-      }
-      if (item.submenu) {
-        item.submenu.forEach((sub) => {
-          if (sub.path === location.pathname) {
-            setOpenSubmenu(item.path);
-            found = true;
-          }
-        });
-      }
-    });
-
-    if (!found) {
-      setOpenSubmenu(null);
-    }
-  }, [location.pathname]);
 
   const drawerContent = (
     <Box

@@ -5,7 +5,9 @@ import { Typography } from "@mui/material";
 const ProductTags = () => {
   return (
     <PageLayout>
-      <Typography>ProductTags</Typography>
+      <div className="flex justify-between items-center h-16">
+        <Typography variant="h5">ÜRÜN ETİKETLERİ</Typography>
+      </div>
     </PageLayout>
   );
 };

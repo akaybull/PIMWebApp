@@ -6,7 +6,7 @@ import { Add, Delete, FileDownload, FileUpload } from "@mui/icons-material";
 const Products = () => {
   return (
     <PageLayout>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center h-16">
         <Typography variant="h5">ÜRÜNLER</Typography>
         <div className="flex gap-2">
           <Button

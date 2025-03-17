@@ -20,7 +20,6 @@ import {
   Checkbox,
   FormGroup,
   Tooltip,
-  OutlinedInput,
   Chip,
   Divider,
   Autocomplete,
@@ -30,14 +29,12 @@ import React, { useState } from "react";
 import {
   AddAPhoto,
   Bookmark,
-  Check,
   ExpandMore,
   Info,
   InfoOutlined,
   List,
   Monitor,
   SavedSearch,
-  ScreenLockLandscape,
 } from "@mui/icons-material";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -115,13 +112,50 @@ const languages = ["standart", "en", "tr", "it", "ru"];
 const CategoryCreate = () => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
+
   const [tabValue, setTabValue] = useState(0);
+
   const [categoryFormState, setCategoryFormState] = React.useState({
-    standart: { name: "", description: "" },
-    tr: { name: "", description: "" },
-    en: { name: "", description: "" },
-    it: { name: "", description: "" },
-    ru: { name: "", description: "" },
+    standart: {
+      name: "",
+      description: "",
+      searchEngineName: "",
+      metaTitle: "",
+      metaKeyWord: "",
+      metaDescription: "",
+    },
+    tr: {
+      name: "",
+      description: "",
+      searchEngineName: "",
+      metaTitle: "",
+      metaKeyWord: "",
+      metaDescription: "",
+    },
+    en: {
+      name: "",
+      description: "",
+      searchEngineName: "",
+      metaTitle: "",
+      metaKeyWord: "",
+      metaDescription: "",
+    },
+    it: {
+      name: "",
+      description: "",
+      searchEngineName: "",
+      metaTitle: "",
+      metaKeyWord: "",
+      metaDescription: "",
+    },
+    ru: {
+      name: "",
+      description: "",
+      searchEngineName: "",
+      metaTitle: "",
+      metaKeyWord: "",
+      metaDescription: "",
+    },
     upperCategory: "",
     image: "",
     published: true,
@@ -139,7 +173,6 @@ const CategoryCreate = () => {
     customerRolles: [],
     companies: [],
   });
-  console.log("categoryFormState", categoryFormState);
 
   const handleCategoryChange = (event) => {
     setCategoryFormState((prevState) => ({
@@ -154,6 +187,7 @@ const CategoryCreate = () => {
       image: event.target.files[0],
     }));
   };
+
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
     setCategoryFormState((prev) => ({
@@ -161,24 +195,28 @@ const CategoryCreate = () => {
       [name]: type === "checkbox" ? checked : value,
     }));
   };
+
   const handleDiscountChange = (newValue) => {
     setCategoryFormState((prevState) => ({
       ...prevState,
       discounts: newValue,
     }));
   };
+
   const handleCustomerRoleChange = (newValue) => {
     setCategoryFormState((prevState) => ({
       ...prevState,
       customerRolles: newValue,
     }));
   };
+
   const handleCompanyChange = (newValue) => {
     setCategoryFormState((prevState) => ({
       ...prevState,
       companies: newValue,
     }));
   };
+
   const handleTabChange = (_, newValue) => setTabValue(newValue);
 
   return (
@@ -236,9 +274,9 @@ const CategoryCreate = () => {
               role="tabpanel"
               hidden={tabValue !== index}
               sx={{ p: 3 }}
-              bgcolor={"#595959"}
+              bgcolor={isDarkMode && "#595959"}
             >
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-2">
                   <Tooltip arrow title="Kategorinin adı.">
                     <InfoOutlined color="primary" />
@@ -569,7 +607,7 @@ const CategoryCreate = () => {
         </AccordionSummary>
         <Divider />
         <AccordionDetails>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col mt-2 gap-4">
             <Autocomplete
               multiple
               id="discounts"
@@ -659,7 +697,147 @@ const CategoryCreate = () => {
           </div>
         </AccordionSummary>
         <Divider />
-        <AccordionDetails></AccordionDetails>
+        <AccordionDetails>
+          <AppBar position="static" color="default">
+            <Tabs
+              value={tabValue}
+              sx={{ minHeight: 50 }}
+              onChange={handleTabChange}
+              indicatorColor="primary"
+              textColor="primary"
+              variant="fullWidth"
+            >
+              {languages.map((lang, index) => (
+                <Tab
+                  key={lang}
+                  label={lang.toUpperCase()}
+                  sx={{ minHeight: 50, fontSize: 14 }}
+                  iconPosition="start"
+                  icon={
+                    lang !== "standart" ? (
+                      <SvgIcon>
+                        <image href={flags[lang]} width="24" height="24" />
+                      </SvgIcon>
+                    ) : null
+                  }
+                  {...{
+                    id: `tab-${index}`,
+                    "aria-controls": `tabpanel-${index}`,
+                  }}
+                />
+              ))}
+            </Tabs>
+          </AppBar>
+
+          {languages.map((lang, index) => (
+            <Box
+              key={lang}
+              role="tabpanel"
+              hidden={tabValue !== index}
+              sx={{ p: 3 }}
+              bgcolor={isDarkMode && "#595959"}
+            >
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-2">
+                  <Tooltip
+                    arrow
+                    title="Arama motoru dostu sayfa adı girin, ör. Sayfa URL'nizi 'en-iyi-kategori yapmak için ''http://www.seninMagazan.com.tr/en-iyi-kategori'. Kategori adına göre otomatik olarak oluşturmak için boş bırakın."
+                  >
+                    <InfoOutlined color="primary" />
+                  </Tooltip>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    label="Arama motoru dostu sayfa adı"
+                    required
+                    fullWidth
+                    value={categoryFormState[lang].searchEngineName}
+                    onChange={(e) =>
+                      setCategoryFormState((prev) => ({
+                        ...prev,
+                        [lang]: {
+                          ...prev[lang],
+                          searchEngineName: e.target.value,
+                        },
+                      }))
+                    }
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Tooltip
+                    arrow
+                    title="Sayfa başlığını geçersiz kıl. Varsayılan, kategorinin adıdır."
+                  >
+                    <InfoOutlined color="primary" />
+                  </Tooltip>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    label="Meta başlığı"
+                    required
+                    fullWidth
+                    value={categoryFormState[lang].metaTitle}
+                    onChange={(e) =>
+                      setCategoryFormState((prev) => ({
+                        ...prev,
+                        [lang]: { ...prev[lang], metaTitle: e.target.value },
+                      }))
+                    }
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Tooltip
+                    arrow
+                    title="Kategori sayfası başlığına eklenecek meta anahtar kelimeler."
+                  >
+                    <InfoOutlined color="primary" />
+                  </Tooltip>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    label="Meta anahtar kelimeleri"
+                    required
+                    fullWidth
+                    value={categoryFormState[lang].metaKeyWord}
+                    onChange={(e) =>
+                      setCategoryFormState((prev) => ({
+                        ...prev,
+                        [lang]: { ...prev[lang], metaKeyWord: e.target.value },
+                      }))
+                    }
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Tooltip
+                    arrow
+                    title="Kategori sayfası başlığına eklenecek meta açıklaması."
+                  >
+                    <InfoOutlined color="primary" />
+                  </Tooltip>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    label="Meta açıklaması"
+                    required
+                    fullWidth
+                    multiline
+                    rows={2}
+                    value={categoryFormState[lang].metaDescription}
+                    onChange={(e) =>
+                      setCategoryFormState((prev) => ({
+                        ...prev,
+                        [lang]: {
+                          ...prev[lang],
+                          metaDescription: e.target.value,
+                        },
+                      }))
+                    }
+                  />
+                </div>
+              </div>
+            </Box>
+          ))}
+        </AccordionDetails>
       </Accordion>
       <Accordion defaultExpanded>
         <AccordionSummary

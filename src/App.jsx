@@ -12,6 +12,7 @@ import AuthGuard from "./components/AuthGuard";
 import Products from "./pages/Catalog/Products";
 import Categories from "./pages/Catalog/Categories";
 import ProductTags from "./pages/Catalog/ProductTags";
+import Brands from "./pages/Catalog/Brands/Brands";
 
 function AppContent() {
   const dispatch = useDispatch();
@@ -42,6 +43,14 @@ function AppContent() {
           }
         />
 
+        <Route
+          path="/brands"
+          element={
+            <AuthGuard>
+              <Brands />
+            </AuthGuard>
+          }
+        />
         <Route
           path="/products"
           element={

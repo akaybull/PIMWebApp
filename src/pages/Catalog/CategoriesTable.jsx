@@ -30,7 +30,6 @@ export default function CategoriesTable() {
   };
 
   const columns = [
-    { field: "id", headerName: "ID", type: "number", width: 80 },
     { field: "Breadcrumb", headerName: "Ad", editable: true, flex: 1 },
     {
       field: "Published",
