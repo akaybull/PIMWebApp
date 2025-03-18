@@ -22,6 +22,7 @@ import {
   Autocomplete,
   Chip,
   Alert,
+  Switch,
 } from "@mui/material";
 import {
   AddAPhoto,
@@ -159,13 +160,30 @@ const BrandCreate = () => {
   const [tabValue, setTabValue] = useState(0);
   const [seoTabValue, setSeoTabValue] = useState(0);
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [isDetail, setIsDetail] = useState(false);
 
+  const handleChange = (event) => {
+    setIsDetail(event.target.checked);
+  };
   return (
     <PageLayout title={"YENİ MARKA EKLE"}>
       <Box sx={{ bgcolor: "background.paper", p: 2, borderRadius: "8px" }}>
-        <div>
-          {" "}
-          <Button>Kaydet</Button>
+        <div className="flex justify-between items-center gap-4">
+          <FormControlLabel
+            control={<Switch checked={isDetail} onChange={handleChange} />}
+            label={"Detaylı"}
+          />
+          <div className="flex gap-4">
+            <Button
+              variant="contained"
+              onClick={() => console.log("state", state)}
+            >
+              Kaydet
+            </Button>
+            <Button variant="contained" color="error">
+              Kaydet ve Düzenlemeye Devam Et
+            </Button>
+          </div>
         </div>
         <Accordion defaultExpanded>
           <AccordionSummary expandIcon={<ExpandMore />}>
@@ -321,7 +339,6 @@ const BrandCreate = () => {
                     label="Yayınlandı"
                   />
                 </div>
-
                 <div className="flex items-center gap-2">
                   <Tooltip
                     arrow
