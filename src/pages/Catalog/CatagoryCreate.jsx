@@ -15,7 +15,6 @@ import {
   Select,
   MenuItem,
   Button,
-  styled,
   FormControlLabel,
   Checkbox,
   FormGroup,
@@ -25,7 +24,7 @@ import {
   Autocomplete,
   Alert,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   AddAPhoto,
   Bookmark,
@@ -39,75 +38,16 @@ import {
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { CatalogData } from "./CatalogData";
-
-const modules = {
-  toolbar: [
-    [{ font: [] }],
-    [{ header: [1, 2, 3, 4, 5, false] }],
-    ["bold", "italic", "underline", "strike"],
-    [{ color: [] }, { background: [] }],
-    [{ align: [] }],
-    [{ list: "ordered" }, { list: "bullet" }],
-    ["blockquote", "code-block"],
-    ["link", "image", "video"],
-    ["clean"],
-  ],
-};
-
-const formats = [
-  "font",
-  "header",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "color",
-  "background",
-  "align",
-  "list",
-  "bullet",
-  "blockquote",
-  "code-block",
-  "link",
-  "image",
-  "video",
-];
-
-const flags = {
-  en: "https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg",
-  tr: "https://upload.wikimedia.org/wikipedia/commons/b/b4/Flag_of_Turkey.svg",
-  it: "https://upload.wikimedia.org/wikipedia/en/0/03/Flag_of_Italy.svg",
-  ru: "https://upload.wikimedia.org/wikipedia/en/f/f3/Flag_of_Russia.svg",
-};
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
-const discounts = ["test1 kategori", "test2 kategori", "test3 kategori"];
-const customerRolles = [
-  "Administrators",
-  "Forum Moderators",
-  "Guests",
-  "Registered",
-  "Vendors",
-];
-const companies = [
-  "Carus Company",
-  "Forum Company",
-  "Guests Company",
-  "Registered Company",
-  "Vendors Company",
-];
-
-const languages = ["standart", "en", "tr", "it", "ru"];
+import {
+  companies,
+  customerRolles,
+  discounts,
+  flags,
+  formats,
+  languages,
+  modules,
+  VisuallyHiddenInput,
+} from "./Brands/BrandCreate";
 
 const CategoryCreate = () => {
   const theme = useTheme();
@@ -115,7 +55,7 @@ const CategoryCreate = () => {
 
   const [tabValue, setTabValue] = useState(0);
 
-  const [categoryFormState, setCategoryFormState] = React.useState({
+  const [categoryFormState, setCategoryFormState] = useState({
     standart: {
       name: "",
       description: "",

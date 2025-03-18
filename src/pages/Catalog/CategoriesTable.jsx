@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   DataGrid,
   GridToolbarColumnsButton,
@@ -10,9 +9,10 @@ import * as XLSX from "xlsx";
 import { CatalogData } from "./CatalogData";
 import { Delete, FileDownload, Save } from "@mui/icons-material";
 import { Box, Button } from "@mui/material";
+import { useState } from "react";
 
 export default function CategoriesTable() {
-  const [rows, setRows] = React.useState(CatalogData);
+  const [rows, setRows] = useState(CatalogData);
   const handleExportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(rows);
     const workbook = XLSX.utils.book_new();

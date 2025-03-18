@@ -3,10 +3,7 @@ import { Provider } from "react-redux";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import { store } from "./redux/store";
-import { useEffect } from "react";
 import SnackbarManager from "./components/SnackbarManager";
-import { useDispatch } from "react-redux";
-import { getCurrentLoginInformationsWithRoles } from "./redux/features/authSlice";
 import { ThemeProvider } from "./theme/ThemeProvider";
 import AuthGuard from "./components/AuthGuard";
 import Products from "./pages/Catalog/Products";
@@ -16,20 +13,6 @@ import Brands from "./pages/Catalog/Brands/Brands";
 import BrandCreate from "./pages/Catalog/Brands/BrandCreate";
 
 function AppContent() {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        await dispatch(getCurrentLoginInformationsWithRoles()).unwrap();
-      } catch (error) {
-        console.error("Kullanıcı bilgileri alınamadı:", error);
-      }
-    };
-
-    initializeAuth();
-  }, [dispatch]);
-
   return (
     <div className="min-h-screen">
       <SnackbarManager />

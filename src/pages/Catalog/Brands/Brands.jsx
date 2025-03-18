@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -23,6 +22,7 @@ import CategoriesTable from "../CategoriesTable";
 import PageLayout from "../../../components/PageLayout";
 import { useNavigate } from "react-router-dom";
 import CustomModal from "../../../components/CustomModal";
+import { useState } from "react";
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -36,9 +36,9 @@ const VisuallyHiddenInput = styled("input")({
 });
 const Brands = () => {
   const navigate = useNavigate();
-  const [isPublished, setIsPublished] = React.useState(1);
-  const [openModal, setOpenModal] = React.useState(false);
-  const [files, setFiles] = React.useState([]);
+  const [isPublished, setIsPublished] = useState(1);
+  const [openModal, setOpenModal] = useState(false);
+  const [files, setFiles] = useState([]);
 
   const handlePublishedChange = (event) => {
     setIsPublished(event.target.value);

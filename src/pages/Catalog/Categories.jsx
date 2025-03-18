@@ -1,4 +1,3 @@
-import React from "react";
 import PageLayout from "../../components/PageLayout";
 import {
   Accordion,
@@ -11,7 +10,6 @@ import {
   Select,
   TextField,
   Typography,
-  styled,
 } from "@mui/material";
 import {
   Add,
@@ -24,24 +22,15 @@ import {
 import CustomModal from "../../components/CustomModal";
 import CategoriesTable from "./CategoriesTable";
 import CatagoryCreate from "./CatagoryCreate";
+import { useState } from "react";
+import { VisuallyHiddenInput } from "./Brands/BrandCreate";
 
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
 const Categories = () => {
-  const [openModal, setOpenModal] = React.useState(false);
-  const [deleteOpenModal, setDeleteOpenModal] = React.useState(false);
-  const [createOpenModal, setCreateOpenModal] = React.useState(false);
-  const [isPublished, setIsPublished] = React.useState(1);
-  const [files, setFiles] = React.useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [deleteOpenModal, setDeleteOpenModal] = useState(false);
+  const [createOpenModal, setCreateOpenModal] = useState(false);
+  const [isPublished, setIsPublished] = useState(1);
+  const [files, setFiles] = useState([]);
 
   const handlePublishedChange = (event) => {
     setIsPublished(event.target.value);

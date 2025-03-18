@@ -33,7 +33,7 @@ const Login = () => {
     } catch (err) {
       dispatch(
         enqueueSnackbar({
-          message: error.error.details,
+          message: err.error.details || err.error.message,
           severity: "error",
           duration: 3000,
         })

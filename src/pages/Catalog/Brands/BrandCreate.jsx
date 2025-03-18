@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import { useReducer, useState } from "react";
 import {
   Accordion,
   AccordionSummary,
@@ -27,6 +27,7 @@ import {
   AddAPhoto,
   Bookmark,
   ExpandMore,
+  Info,
   InfoOutlined,
   List,
   Monitor,
@@ -36,29 +37,62 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import PageLayout from "../../../components/PageLayout";
 
-const languages = ["standart", "en", "tr", "it", "ru"];
-const flags = {
+export const formats = [
+  "font",
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "color",
+  "background",
+  "align",
+  "list",
+  "bullet",
+  "blockquote",
+  "code-block",
+  "link",
+  "image",
+  "video",
+];
+
+export const modules = {
+  toolbar: [
+    [{ font: [] }],
+    [{ header: [1, 2, 3, 4, 5, false] }],
+    ["bold", "italic", "underline", "strike"],
+    [{ color: [] }, { background: [] }],
+    [{ align: [] }],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["blockquote", "code-block"],
+    ["link", "image", "video"],
+    ["clean"],
+  ],
+};
+
+export const languages = ["standart", "en", "tr", "it", "ru"];
+export const flags = {
   en: "https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg",
   tr: "https://upload.wikimedia.org/wikipedia/commons/b/b4/Flag_of_Turkey.svg",
   it: "https://upload.wikimedia.org/wikipedia/en/0/03/Flag_of_Italy.svg",
   ru: "https://upload.wikimedia.org/wikipedia/en/f/f3/Flag_of_Russia.svg",
 };
-const discounts = ["test1 kategori", "test2 kategori", "test3 kategori"];
-const customerRolles = [
+export const discounts = ["test1 kategori", "test2 kategori", "test3 kategori"];
+export const customerRolles = [
   "Administrators",
   "Forum Moderators",
   "Guests",
   "Registered",
   "Vendors",
 ];
-const companies = [
+export const companies = [
   "Carus Company",
   "Forum Company",
   "Guests Company",
   "Registered Company",
   "Vendors Company",
 ];
-const VisuallyHiddenInput = styled("input")({
+export const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
   height: 1,
@@ -127,11 +161,18 @@ const BrandCreate = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <PageLayout title={"Yeni Marka Ekle"}>
+    <PageLayout title={"YENİ MARKA EKLE"}>
       <Box sx={{ bgcolor: "background.paper", p: 2, borderRadius: "8px" }}>
+        <div>
+          {" "}
+          <Button>Kaydet</Button>
+        </div>
         <Accordion defaultExpanded>
           <AccordionSummary expandIcon={<ExpandMore />}>
-            <Typography variant="h6">Marka Bilgisi</Typography>
+            <div className="flex gap-4 items-center">
+              <Info fontSize="large" />
+              <Typography variant="h6">Marka Bilgisi</Typography>
+            </div>
           </AccordionSummary>
           <Divider />
           <AccordionDetails>
@@ -191,6 +232,8 @@ const BrandCreate = () => {
                     })
                   }
                   className={isDarkMode ? "quill-dark" : ""}
+                  modules={modules}
+                  formats={formats}
                 />
               </Box>
             ))}
@@ -498,6 +541,7 @@ const BrandCreate = () => {
             <div className="flex flex-col mt-2 gap-4">
               <Autocomplete
                 multiple
+                freeSolo
                 id="discounts"
                 disableCloseOnSelect
                 value={state.discounts || null}
@@ -523,6 +567,7 @@ const BrandCreate = () => {
               <div className="flex gap-4">
                 <Autocomplete
                   multiple
+                  freeSolo
                   id="customerRolles"
                   className="w-1/2"
                   disableCloseOnSelect
@@ -554,6 +599,7 @@ const BrandCreate = () => {
               <div className="flex gap-4">
                 <Autocomplete
                   multiple
+                  freeSolo
                   id="companies"
                   className="w-1/2"
                   disableCloseOnSelect
