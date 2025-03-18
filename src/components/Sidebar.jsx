@@ -9,13 +9,10 @@ import {
   useTheme,
   IconButton,
   useMediaQuery,
-  Tooltip,
   Collapse,
 } from "@mui/material";
 import {
-  Dashboard as DashboardIcon,
-  Logout as LogoutIcon,
-  Menu as MenuIcon,
+  Dashboard,
   ChevronLeft,
   ExpandMore,
   ProductionQuantityLimits,
@@ -24,11 +21,10 @@ import {
   BrandingWatermark,
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { logout } from "../redux/features/authSlice";
-import ThemeToggle from "./ThemeToggle";
 import React, { useState } from "react";
 import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleMobileMenu } from "../redux/features/settingsSlice";
 
 const drawerWidth = 240;
 
@@ -37,29 +33,26 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const isOpenMobileMenu = useSelector(
+    (state) => state.settings.isOpenMobileMenu
+  );
   const [isCollapsed, setIsCollapsed] = useState(() => {
     return Cookies.get("isCollapsed") === "true";
   });
   const [openSubmenu, setOpenSubmenu] = useState("/catalog");
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const handleCollapseToggle = () => {
     const newCollapsedState = !isCollapsed;
     Cookies.set("isCollapsed", newCollapsedState, { expires: 30 });
     setIsCollapsed(newCollapsedState);
   };
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
-  };
 
   const menuItems = [
     {
       text: "Yönetim Paneli",
-      icon: <DashboardIcon />,
+      icon: <Dashboard />,
       path: "/dashboard",
       mainPath: "/dashboard",
     },
@@ -114,7 +107,7 @@ const Sidebar = () => {
     >
       <Box
         sx={{
-          p: 2,
+          p: 1.5,
           alignItems: "center",
           display: "flex",
           justifyContent: isCollapsed ? "center" : "space-between",
@@ -242,7 +235,9 @@ const Sidebar = () => {
                         >
                           {subItem.icon}
                         </ListItemIcon>
-                        <ListItemText primary={subItem.text} />
+                        {!isCollapsed && (
+                          <ListItemText primary={subItem.text} />
+                        )}
                       </ListItem>
                     ))}
                   </List>
@@ -252,83 +247,15 @@ const Sidebar = () => {
           );
         })}
       </List>
-
-      <Box sx={{ mt: "auto" }}>
-        <Divider />
-        <List>
-          <ListItem sx={{ justifyContent: "center", mb: 0.05 }}>
-            <ThemeToggle />
-          </ListItem>
-
-          <Tooltip title={isCollapsed ? "Çıkış Yap" : ""} placement="right">
-            <ListItem
-              onClick={handleLogout}
-              sx={(theme) => ({
-                mx: 1,
-                borderRadius: 1,
-                justifyContent: isCollapsed ? "center" : "flex-start",
-                transition: "all 0.2s",
-                width: "auto",
-                "&:hover": {
-                  cursor: "pointer",
-                  bgcolor:
-                    theme.palette.mode === "dark"
-                      ? "error.dark"
-                      : "error.light",
-                  color: "common.white",
-                  "& .MuiListItemIcon-root": {
-                    color: "common.white",
-                  },
-                },
-              })}
-            >
-              <ListItemIcon sx={{ minWidth: isCollapsed ? "auto" : 40 }}>
-                <LogoutIcon />
-              </ListItemIcon>
-              {!isCollapsed && <ListItemText primary="Çıkış Yap" />}
-            </ListItem>
-          </Tooltip>
-        </List>
-      </Box>
     </Box>
   );
 
   return (
     <>
-      {isMobile && (
-        <Box
-          sx={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: "64px",
-            bgcolor: "background.paper",
-            borderBottom: "1px solid",
-            borderColor: "divider",
-            display: "flex",
-            alignItems: "center",
-            px: 2,
-            zIndex: (theme) => theme.zIndex.drawer + 1,
-          }}
-        >
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-          >
-            <MenuIcon />
-          </IconButton>
-        </Box>
-      )}
-
-      {isMobile && <Box sx={{ height: "64px" }} />}
-
       <Drawer
         variant={isMobile ? "temporary" : "permanent"}
-        open={isMobile ? mobileOpen : true}
-        onClose={isMobile ? handleDrawerToggle : undefined}
+        open={isOpenMobileMenu}
+        onClose={() => dispatch(toggleMobileMenu())}
         ModalProps={{
           keepMounted: true,
         }}
@@ -345,7 +272,6 @@ const Sidebar = () => {
             bgcolor: "background.paper",
             borderRight: "1px solid",
             borderColor: "divider",
-            paddingTop: isMobile && "64px",
             transition: theme.transitions.create(["width"], {
               easing: theme.transitions.easing.sharp,
               duration: "0.3s",

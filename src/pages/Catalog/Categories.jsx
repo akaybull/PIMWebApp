@@ -5,10 +5,8 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
-  Divider,
   FormControl,
   InputLabel,
-  Menu,
   MenuItem,
   Select,
   TextField,
@@ -20,19 +18,13 @@ import {
   CloudUpload,
   Delete,
   ExpandMore,
-  FileDownload,
   FileUpload,
-  KeyboardArrowDown,
   Search,
 } from "@mui/icons-material";
 import CustomModal from "../../components/CustomModal";
 import CategoriesTable from "./CategoriesTable";
 import CatagoryCreate from "./CatagoryCreate";
 
-const StyledMenuItem = styled(MenuItem)`
-  font-size: 0.75rem;
-  padding: 8px 16px;
-`;
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -45,31 +37,19 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 const Categories = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-
   const [openModal, setOpenModal] = React.useState(false);
   const [deleteOpenModal, setDeleteOpenModal] = React.useState(false);
   const [createOpenModal, setCreateOpenModal] = React.useState(false);
   const [isPublished, setIsPublished] = React.useState(1);
   const [files, setFiles] = React.useState([]);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const handlePublishedChange = (event) => {
     setIsPublished(event.target.value);
   };
 
   return (
-    <PageLayout>
-      <div className="flex h-16 justify-between items-center flex-wrap">
-        <Typography variant="h5">KATEGORİLER</Typography>
+    <PageLayout title={"KATEGORİLER"}>
+      <div className="flex h-16 justify-end items-center flex-wrap">
         <div className="flex gap-2 flex-wrap">
           <Button
             startIcon={<Add />}
@@ -78,48 +58,6 @@ const Categories = () => {
           >
             Yeni Ekle
           </Button>
-          {/* <Button
-            startIcon={<FileDownload />}
-            endIcon={<KeyboardArrowDown />}
-            variant="contained"
-            color="success"
-            id="basic-button"
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-          >
-            Dışa Aktar
-          </Button>
-          <Menu
-            id="basic-menu"
-            elevation={0}
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            <StyledMenuItem onClick={handleClose}>
-              XML'e Aktar(Tümü)
-            </StyledMenuItem>
-            <StyledMenuItem onClick={handleClose}>
-              XML'e Aktar (Seçili)
-            </StyledMenuItem>
-            <Divider />
-            <StyledMenuItem onClick={handleClose}>
-              Excel'e Aktar (Tümü)
-            </StyledMenuItem>
-            <StyledMenuItem onClick={handleClose}>
-              Excel'e Aktar (Seçili)
-            </StyledMenuItem>
-          </Menu> */}
           <Button
             startIcon={<FileUpload />}
             variant="contained"

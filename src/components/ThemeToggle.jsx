@@ -14,7 +14,7 @@ const ThemeToggle = () => {
           ? "Aydınlık Moda Geç"
           : "Karanlık Moda Geç"
       }
-      placement="right"
+      placement="bottom"
     >
       <IconButton
         onClick={colorMode.toggleColorMode}

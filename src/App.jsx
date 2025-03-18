@@ -13,6 +13,7 @@ import Products from "./pages/Catalog/Products";
 import Categories from "./pages/Catalog/Categories";
 import ProductTags from "./pages/Catalog/ProductTags";
 import Brands from "./pages/Catalog/Brands/Brands";
+import BrandCreate from "./pages/Catalog/Brands/BrandCreate";
 
 function AppContent() {
   const dispatch = useDispatch();
@@ -48,6 +49,14 @@ function AppContent() {
           element={
             <AuthGuard>
               <Brands />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/brands/create"
+          element={
+            <AuthGuard>
+              <BrandCreate />
             </AuthGuard>
           }
         />
