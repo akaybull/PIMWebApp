@@ -1,3 +1,4 @@
+import React, { useReducer, useState } from "react";
 import {
   Accordion,
   AccordionSummary,
@@ -17,17 +18,15 @@ import {
   Checkbox,
   FormGroup,
   Tooltip,
-  Chip,
   Divider,
   Autocomplete,
+  Chip,
   Alert,
 } from "@mui/material";
-import React, { useState } from "react";
 import {
   AddAPhoto,
   Bookmark,
   ExpandMore,
-  Info,
   InfoOutlined,
   List,
   Monitor,
@@ -37,57 +36,13 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import PageLayout from "../../../components/PageLayout";
 
-const modules = {
-  toolbar: [
-    [{ font: [] }],
-    [{ header: [1, 2, 3, 4, 5, false] }],
-    ["bold", "italic", "underline", "strike"],
-    [{ color: [] }, { background: [] }],
-    [{ align: [] }],
-    [{ list: "ordered" }, { list: "bullet" }],
-    ["blockquote", "code-block"],
-    ["link", "image", "video"],
-    ["clean"],
-  ],
-};
-
-const formats = [
-  "font",
-  "header",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "color",
-  "background",
-  "align",
-  "list",
-  "bullet",
-  "blockquote",
-  "code-block",
-  "link",
-  "image",
-  "video",
-];
-
+const languages = ["standart", "en", "tr", "it", "ru"];
 const flags = {
   en: "https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg",
   tr: "https://upload.wikimedia.org/wikipedia/commons/b/b4/Flag_of_Turkey.svg",
   it: "https://upload.wikimedia.org/wikipedia/en/0/03/Flag_of_Italy.svg",
   ru: "https://upload.wikimedia.org/wikipedia/en/f/f3/Flag_of_Russia.svg",
 };
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
 const discounts = ["test1 kategori", "test2 kategori", "test3 kategori"];
 const customerRolles = [
   "Administrators",
@@ -103,138 +58,92 @@ const companies = [
   "Registered Company",
   "Vendors Company",
 ];
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
-const languages = ["standart", "en", "tr", "it", "ru"];
+const initialState = {
+  languages: languages.reduce((acc, lang) => {
+    acc[lang] = {
+      name: "",
+      description: "",
+      searchEngineName: "",
+      metaTitle: "",
+      metaKeyWord: "",
+      metaDescription: "",
+    };
+    return acc;
+  }, {}),
+  image: "",
+  published: true,
+  allowPageSizeSelection: true,
+  pageSize: 10,
+  pageSizeOptions: "6, 3, 9",
+  enablePriceFilter: true,
+  manualPriceEntry: true,
+  startPrice: 0,
+  endPrice: 10000.0,
+  displayOrder: 0,
+  discounts: [],
+  customerRolles: [],
+  companies: [],
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "UPDATE_LANGUAGE_FIELD":
+      return {
+        ...state,
+        languages: {
+          ...state.languages,
+          [action.payload.lang]: {
+            ...state.languages[action.payload.lang],
+            [action.payload.field]: action.payload.value,
+          },
+        },
+      };
+    case "UPDATE_FIELD":
+      return { ...state, [action.payload.field]: action.payload.value };
+    case "UPDATE_IMAGE":
+      return { ...state, image: action.payload };
+    default:
+      return state;
+  }
+}
 
 const BrandCreate = () => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
-
   const [tabValue, setTabValue] = useState(0);
-
-  const [categoryFormState, setCategoryFormState] = React.useState({
-    standart: {
-      name: "",
-      description: "",
-      searchEngineName: "",
-      metaTitle: "",
-      metaKeyWord: "",
-      metaDescription: "",
-    },
-    tr: {
-      name: "",
-      description: "",
-      searchEngineName: "",
-      metaTitle: "",
-      metaKeyWord: "",
-      metaDescription: "",
-    },
-    en: {
-      name: "",
-      description: "",
-      searchEngineName: "",
-      metaTitle: "",
-      metaKeyWord: "",
-      metaDescription: "",
-    },
-    it: {
-      name: "",
-      description: "",
-      searchEngineName: "",
-      metaTitle: "",
-      metaKeyWord: "",
-      metaDescription: "",
-    },
-    ru: {
-      name: "",
-      description: "",
-      searchEngineName: "",
-      metaTitle: "",
-      metaKeyWord: "",
-      metaDescription: "",
-    },
-    image: "",
-    published: true,
-    allowPageSizeSelection: true,
-    pageSize: 10,
-    pageSizeOptions: "6, 3, 9",
-    enablePriceFilter: true,
-    manualPriceEntry: true,
-    startPrice: 0,
-    endPrice: 10000.0,
-    displayOrder: 0,
-    discounts: [],
-    customerRolles: [],
-    companies: [],
-  });
-
-  const handleImageChange = (event) => {
-    setCategoryFormState((prevState) => ({
-      ...prevState,
-      image: event.target.files[0],
-    }));
-  };
-
-  const handleInputChange = (event) => {
-    const { name, value, type, checked } = event.target;
-    setCategoryFormState((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  const handleDiscountChange = (newValue) => {
-    setCategoryFormState((prevState) => ({
-      ...prevState,
-      discounts: newValue,
-    }));
-  };
-
-  const handleCustomerRoleChange = (newValue) => {
-    setCategoryFormState((prevState) => ({
-      ...prevState,
-      customerRolles: newValue,
-    }));
-  };
-
-  const handleCompanyChange = (newValue) => {
-    setCategoryFormState((prevState) => ({
-      ...prevState,
-      companies: newValue,
-    }));
-  };
-
-  const handleTabChange = (_, newValue) => setTabValue(newValue);
+  const [seoTabValue, setSeoTabValue] = useState(0);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <PageLayout title={"Yeni Marka Ekle"}>
-      <Box
-        sx={{
-          bgcolor: "background.paper",
-          position: "relative",
-          borderRadius: "8px",
-          padding: "16px",
-        }}
-      >
+      <Box sx={{ bgcolor: "background.paper", p: 2, borderRadius: "8px" }}>
         <Accordion defaultExpanded>
           <AccordionSummary expandIcon={<ExpandMore />}>
-            <div className="flex gap-4 items-center">
-              <Info fontSize="large" />
-              <Typography variant="h6">Marka Bilgisi</Typography>
-            </div>
+            <Typography variant="h6">Marka Bilgisi</Typography>
           </AccordionSummary>
           <Divider />
           <AccordionDetails>
             <AppBar position="static" color="default">
               <Tabs
                 value={tabValue}
-                sx={{ minHeight: 50 }}
-                onChange={handleTabChange}
+                onChange={(_, newValue) => setTabValue(newValue)}
                 indicatorColor="primary"
                 textColor="primary"
                 variant="fullWidth"
               >
-                {languages.map((lang, index) => (
+                {languages.map((lang) => (
                   <Tab
                     key={lang}
                     label={lang.toUpperCase()}
@@ -247,10 +156,6 @@ const BrandCreate = () => {
                         </SvgIcon>
                       ) : null
                     }
-                    {...{
-                      id: `tab-${index}`,
-                      "aria-controls": `tabpanel-${index}`,
-                    }}
                   />
                 ))}
               </Tabs>
@@ -261,96 +166,79 @@ const BrandCreate = () => {
                 key={lang}
                 role="tabpanel"
                 hidden={tabValue !== index}
-                sx={{ p: 3 }}
                 bgcolor={isDarkMode && "#595959"}
+                sx={{ p: 3 }}
               >
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center gap-2">
-                    <Tooltip arrow title="Kategorinin adı.">
-                      <InfoOutlined color="primary" />
-                    </Tooltip>
-                    <TextField
-                      variant="outlined"
-                      size="small"
-                      label="Ad"
-                      required
-                      fullWidth
-                      value={categoryFormState[lang].name}
-                      onChange={(e) =>
-                        setCategoryFormState((prev) => ({
-                          ...prev,
-                          [lang]: { ...prev[lang], name: e.target.value },
-                        }))
-                      }
-                    />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <Tooltip arrow title="Kategorinin açıklaması.">
-                        <InfoOutlined color="primary" />
-                      </Tooltip>
-                      <InputLabel>Açıklama</InputLabel>
-                    </div>
-                    <ReactQuill
-                      value={categoryFormState[lang].description}
-                      onChange={(value) =>
-                        setCategoryFormState((prev) => ({
-                          ...prev,
-                          [lang]: { ...prev[lang], description: value },
-                        }))
-                      }
-                      modules={modules}
-                      formats={formats}
-                      className={isDarkMode ? "quill-dark" : ""}
-                    />
-                  </div>
-                </div>
+                <TextField
+                  label="Ad"
+                  fullWidth
+                  size="small"
+                  value={state.languages[lang].name}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "UPDATE_LANGUAGE_FIELD",
+                      payload: { lang, field: "name", value: e.target.value },
+                    })
+                  }
+                />
+                <InputLabel>Açıklama</InputLabel>
+                <ReactQuill
+                  value={state.languages[lang].description}
+                  onChange={(value) =>
+                    dispatch({
+                      type: "UPDATE_LANGUAGE_FIELD",
+                      payload: { lang, field: "description", value },
+                    })
+                  }
+                  className={isDarkMode ? "quill-dark" : ""}
+                />
               </Box>
             ))}
-            <div className="flex flex-col gap-2 p-6">
-              <div className="flex items-center gap-2 mt-3 border p-2 rounded-md">
-                <Typography fontSize="14px" fontWeight="bold">
-                  Resim:
-                </Typography>
-                <Button
-                  component="label"
-                  variant="contained"
-                  startIcon={<AddAPhoto />}
-                >
-                  Dosya Seç
-                  <VisuallyHiddenInput
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
+
+            <div className="flex items-center gap-2 mt-3 border p-2 rounded-md">
+              <Typography fontSize="14px" fontWeight="bold">
+                Resim:
+              </Typography>
+              <Button
+                component="label"
+                variant="contained"
+                startIcon={<AddAPhoto />}
+              >
+                Dosya Seç
+                <VisuallyHiddenInput
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>
+                    dispatch({
+                      type: "UPDATE_IMAGE",
+                      payload: e.target.files[0],
+                    })
+                  }
+                />
+              </Button>
+              {state.image && (
+                <div className="flex items-center gap-2">
+                  <img
+                    src={URL.createObjectURL(categoryFormState.image)}
+                    alt="Yüklenen Resim"
+                    className="h-16 object-cover rounded-md"
                   />
-                </Button>
-                {categoryFormState.image && (
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={URL.createObjectURL(categoryFormState.image)}
-                      alt="Yüklenen Resim"
-                      className="h-16 object-cover rounded-md"
-                    />
-                    <Typography fontSize="14px">
-                      {categoryFormState.image.name} (
-                      {(categoryFormState.image.size / 1024).toFixed(2)} KB)
-                    </Typography>
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      size="small"
-                      onClick={() =>
-                        setCategoryFormState((prev) => ({
-                          ...prev,
-                          image: null,
-                        }))
-                      }
-                    >
-                      Sil
-                    </Button>
-                  </div>
-                )}
-              </div>
+                  <Typography fontSize="14px">
+                    {state.image.name} ({(state.image.size / 1024).toFixed(2)}{" "}
+                    KB)
+                  </Typography>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    size="small"
+                    onClick={() =>
+                      dispatch({ type: "UPDATE_IMAGE", payload: null })
+                    }
+                  >
+                    Sil
+                  </Button>
+                </div>
+              )}
             </div>
           </AccordionDetails>
         </Accordion>
@@ -375,14 +263,22 @@ const BrandCreate = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={categoryFormState.published}
-                        onChange={handleInputChange}
-                        name="published"
+                        checked={state.published}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "UPDATE_FIELD",
+                            payload: {
+                              field: "published",
+                              value: e.target.checked,
+                            },
+                          })
+                        }
                       />
                     }
                     label="Yayınlandı"
                   />
                 </div>
+
                 <div className="flex items-center gap-2">
                   <Tooltip
                     arrow
@@ -393,15 +289,22 @@ const BrandCreate = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={categoryFormState.allowPageSizeSelection}
-                        onChange={handleInputChange}
-                        name="allowPageSizeSelection"
+                        checked={state.allowPageSizeSelection}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "UPDATE_FIELD",
+                            payload: {
+                              field: "allowPageSizeSelection",
+                              value: e.target.checked,
+                            },
+                          })
+                        }
                       />
                     }
                     label="Müşterilerin sayfa boyutunu seçmesine izin ver"
                   />
                 </div>
-                {categoryFormState.allowPageSizeSelection ? (
+                {state.allowPageSizeSelection ? (
                   <div className="flex items-center gap-2">
                     <Tooltip
                       arrow
@@ -413,9 +316,16 @@ const BrandCreate = () => {
                       label="Sayfa Boyutu Seçenekleri"
                       type="string"
                       size="small"
-                      name="pageSizeOptions"
-                      value={categoryFormState.pageSizeOptions}
-                      onChange={handleInputChange}
+                      value={state.pageSizeOptions}
+                      onChange={(e) =>
+                        dispatch({
+                          type: "UPDATE_FIELD",
+                          payload: {
+                            field: "pageSizeOptions",
+                            value: e.target.value,
+                          },
+                        })
+                      }
                       className="w-1/2"
                     />
                   </div>
@@ -431,9 +341,16 @@ const BrandCreate = () => {
                       label="Sayfa Boyutu"
                       type="number"
                       size="small"
-                      name="pageSize"
-                      value={categoryFormState.pageSize}
-                      onChange={handleInputChange}
+                      value={state.pageSize}
+                      onChange={(e) =>
+                        dispatch({
+                          type: "UPDATE_FIELD",
+                          payload: {
+                            field: "pageSize",
+                            value: Number(e.target.value),
+                          },
+                        })
+                      }
                       className="w-1/2"
                     />
                   </div>
@@ -448,15 +365,22 @@ const BrandCreate = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={categoryFormState.enablePriceFilter}
-                        onChange={handleInputChange}
-                        name="enablePriceFilter"
+                        checked={state.enablePriceFilter}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "UPDATE_FIELD",
+                            payload: {
+                              field: "enablePriceFilter",
+                              value: e.target.checked,
+                            },
+                          })
+                        }
                       />
                     }
                     label="Fiyat aralığı filtreleme"
                   />
                 </div>
-                {categoryFormState.enablePriceFilter && (
+                {state.enablePriceFilter && (
                   <div className="flex items-center gap-2">
                     <Tooltip
                       arrow
@@ -467,16 +391,23 @@ const BrandCreate = () => {
                     <FormControlLabel
                       control={
                         <Checkbox
-                          checked={categoryFormState.manualPriceEntry}
-                          onChange={handleInputChange}
-                          name="manualPriceEntry"
+                          checked={state.manualPriceEntry}
+                          onChange={(e) =>
+                            dispatch({
+                              type: "UPDATE_FIELD",
+                              payload: {
+                                field: "manualPriceEntry",
+                                value: e.target.checked,
+                              },
+                            })
+                          }
                         />
                       }
                       label="Fiyat aralığını elle girin"
                     />
                   </div>
                 )}
-                {categoryFormState.manualPriceEntry && (
+                {state.manualPriceEntry && (
                   <div className="flex gap-4">
                     <div className="flex items-center gap-2">
                       <Tooltip arrow title="Başlangıç fiyatını girin.">
@@ -487,8 +418,16 @@ const BrandCreate = () => {
                         type="number"
                         size="small"
                         name="startPrice"
-                        value={categoryFormState.startPrice}
-                        onChange={handleInputChange}
+                        value={state.startPrice}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "UPDATE_FIELD",
+                            payload: {
+                              field: "startPrice",
+                              value: Number(e.target.value),
+                            },
+                          })
+                        }
                         className="w-full"
                       />
                     </div>
@@ -501,8 +440,16 @@ const BrandCreate = () => {
                         type="number"
                         size="small"
                         name="endPrice"
-                        value={categoryFormState.endPrice}
-                        onChange={handleInputChange}
+                        value={state.endPrice}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "UPDATE_FIELD",
+                            payload: {
+                              field: "endPrice",
+                              value: Number(e.target.value),
+                            },
+                          })
+                        }
                         className="w-full"
                       />
                     </div>
@@ -519,10 +466,16 @@ const BrandCreate = () => {
                     label="Görüntüleme Sırası"
                     type="number"
                     size="small"
-                    name="displayOrder"
-                    value={categoryFormState.displayOrder}
-                    onChange={handleInputChange}
-                    className="w-1/2"
+                    value={state.displayOrder}
+                    onChange={(e) =>
+                      dispatch({
+                        type: "UPDATE_FIELD",
+                        payload: {
+                          field: "displayOrder",
+                          value: Number(e.target.value),
+                        },
+                      })
+                    }
                   />
                 </div>
               </FormGroup>
@@ -547,8 +500,13 @@ const BrandCreate = () => {
                 multiple
                 id="discounts"
                 disableCloseOnSelect
-                value={categoryFormState.discounts}
-                onChange={(event, newValue) => handleDiscountChange(newValue)}
+                value={state.discounts || null}
+                onChange={(event, newValue) =>
+                  dispatch({
+                    type: "UPDATE_FIELD",
+                    payload: { field: "discounts", value: newValue },
+                  })
+                }
                 size="small"
                 options={discounts}
                 getOptionLabel={(option) => option}
@@ -568,9 +526,12 @@ const BrandCreate = () => {
                   id="customerRolles"
                   className="w-1/2"
                   disableCloseOnSelect
-                  value={categoryFormState.customerRolles}
+                  value={state.customerRolles || null}
                   onChange={(event, newValue) =>
-                    handleCustomerRoleChange(newValue)
+                    dispatch({
+                      type: "UPDATE_FIELD",
+                      payload: { field: "customerRolles", value: newValue },
+                    })
                   }
                   size="small"
                   options={customerRolles}
@@ -596,8 +557,13 @@ const BrandCreate = () => {
                   id="companies"
                   className="w-1/2"
                   disableCloseOnSelect
-                  value={categoryFormState.companies}
-                  onChange={(event, newValue) => handleCompanyChange(newValue)}
+                  value={state.companies || null}
+                  onChange={(event, newValue) =>
+                    dispatch({
+                      type: "UPDATE_FIELD",
+                      payload: { field: "companies", value: newValue },
+                    })
+                  }
                   size="small"
                   options={companies}
                   getOptionLabel={(option) => option}
@@ -635,14 +601,13 @@ const BrandCreate = () => {
           <AccordionDetails>
             <AppBar position="static" color="default">
               <Tabs
-                value={tabValue}
-                sx={{ minHeight: 50 }}
-                onChange={handleTabChange}
+                value={seoTabValue}
+                onChange={(_, newValue) => setSeoTabValue(newValue)}
                 indicatorColor="primary"
                 textColor="primary"
                 variant="fullWidth"
               >
-                {languages.map((lang, index) => (
+                {languages.map((lang) => (
                   <Tab
                     key={lang}
                     label={lang.toUpperCase()}
@@ -655,10 +620,6 @@ const BrandCreate = () => {
                         </SvgIcon>
                       ) : null
                     }
-                    {...{
-                      id: `tab-${index}`,
-                      "aria-controls": `tabpanel-${index}`,
-                    }}
                   />
                 ))}
               </Tabs>
@@ -686,15 +647,16 @@ const BrandCreate = () => {
                       label="Arama motoru dostu sayfa adı"
                       required
                       fullWidth
-                      value={categoryFormState[lang].searchEngineName}
+                      value={state.languages[lang].searchEngineName}
                       onChange={(e) =>
-                        setCategoryFormState((prev) => ({
-                          ...prev,
-                          [lang]: {
-                            ...prev[lang],
-                            searchEngineName: e.target.value,
+                        dispatch({
+                          type: "UPDATE_LANGUAGE_FIELD",
+                          payload: {
+                            lang,
+                            field: "searchEngineName",
+                            value: e.target.value,
                           },
-                        }))
+                        })
                       }
                     />
                   </div>
@@ -711,12 +673,16 @@ const BrandCreate = () => {
                       label="Meta başlığı"
                       required
                       fullWidth
-                      value={categoryFormState[lang].metaTitle}
+                      value={state.languages[lang].metaTitle}
                       onChange={(e) =>
-                        setCategoryFormState((prev) => ({
-                          ...prev,
-                          [lang]: { ...prev[lang], metaTitle: e.target.value },
-                        }))
+                        dispatch({
+                          type: "UPDATE_LANGUAGE_FIELD",
+                          payload: {
+                            lang,
+                            field: "metaTitle",
+                            value: e.target.value,
+                          },
+                        })
                       }
                     />
                   </div>
@@ -733,15 +699,16 @@ const BrandCreate = () => {
                       label="Meta anahtar kelimeleri"
                       required
                       fullWidth
-                      value={categoryFormState[lang].metaKeyWord}
+                      value={state.languages[lang].metaKeyWord}
                       onChange={(e) =>
-                        setCategoryFormState((prev) => ({
-                          ...prev,
-                          [lang]: {
-                            ...prev[lang],
-                            metaKeyWord: e.target.value,
+                        dispatch({
+                          type: "UPDATE_LANGUAGE_FIELD",
+                          payload: {
+                            lang,
+                            field: "metaKeyWord",
+                            value: e.target.value,
                           },
-                        }))
+                        })
                       }
                     />
                   </div>
@@ -760,15 +727,16 @@ const BrandCreate = () => {
                       fullWidth
                       multiline
                       rows={2}
-                      value={categoryFormState[lang].metaDescription}
+                      value={state.languages[lang].metaDescription}
                       onChange={(e) =>
-                        setCategoryFormState((prev) => ({
-                          ...prev,
-                          [lang]: {
-                            ...prev[lang],
-                            metaDescription: e.target.value,
+                        dispatch({
+                          type: "UPDATE_LANGUAGE_FIELD",
+                          payload: {
+                            lang,
+                            field: "metaDescription",
+                            value: e.target.value,
                           },
-                        }))
+                        })
                       }
                     />
                   </div>
