@@ -8,9 +8,11 @@ import AuthGuard from "./components/AuthGuard";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Login = lazy(() => import("./pages/Login"));
-const Products = lazy(() => import("./pages/Catalog/Products"));
-const Categories = lazy(() => import("./pages/Catalog/Categories"));
-const ProductTags = lazy(() => import("./pages/Catalog/ProductTags"));
+const Products = lazy(() => import("./pages/Catalog/Products/Products"));
+const Categories = lazy(() => import("./pages/Catalog/Category/Categories"));
+const ProductTags = lazy(() =>
+  import("./pages/Catalog/ProductTags/ProductTags")
+);
 const Brands = lazy(() => import("./pages/Catalog/Brands/Brands"));
 const BrandCreate = lazy(() => import("./pages/Catalog/Brands/BrandCreate"));
 

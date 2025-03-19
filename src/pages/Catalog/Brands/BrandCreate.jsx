@@ -13,7 +13,6 @@ import {
   useTheme,
   InputLabel,
   Button,
-  styled,
   FormControlLabel,
   Checkbox,
   FormGroup,
@@ -23,6 +22,7 @@ import {
   Chip,
   Alert,
   Switch,
+  Input,
 } from "@mui/material";
 import {
   AddAPhoto,
@@ -37,73 +37,15 @@ import {
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import PageLayout from "../../../components/PageLayout";
-
-export const formats = [
-  "font",
-  "header",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "color",
-  "background",
-  "align",
-  "list",
-  "bullet",
-  "blockquote",
-  "code-block",
-  "link",
-  "image",
-  "video",
-];
-
-export const modules = {
-  toolbar: [
-    [{ font: [] }],
-    [{ header: [1, 2, 3, 4, 5, false] }],
-    ["bold", "italic", "underline", "strike"],
-    [{ color: [] }, { background: [] }],
-    [{ align: [] }],
-    [{ list: "ordered" }, { list: "bullet" }],
-    ["blockquote", "code-block"],
-    ["link", "image", "video"],
-    ["clean"],
-  ],
-};
-
-export const languages = ["standart", "en", "tr", "it", "ru"];
-export const flags = {
-  en: "https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg",
-  tr: "https://upload.wikimedia.org/wikipedia/commons/b/b4/Flag_of_Turkey.svg",
-  it: "https://upload.wikimedia.org/wikipedia/en/0/03/Flag_of_Italy.svg",
-  ru: "https://upload.wikimedia.org/wikipedia/en/f/f3/Flag_of_Russia.svg",
-};
-export const discounts = ["test1 kategori", "test2 kategori", "test3 kategori"];
-export const customerRolles = [
-  "Administrators",
-  "Forum Moderators",
-  "Guests",
-  "Registered",
-  "Vendors",
-];
-export const companies = [
-  "Carus Company",
-  "Forum Company",
-  "Guests Company",
-  "Registered Company",
-  "Vendors Company",
-];
-export const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
+import {
+  companiesData,
+  customerRolles,
+  discounts,
+  flags,
+  formats,
+  languages,
+  modules,
+} from "../../../constant/constant";
 
 const initialState = {
   languages: languages.reduce((acc, lang) => {
@@ -161,7 +103,6 @@ const BrandCreate = () => {
   const [seoTabValue, setSeoTabValue] = useState(0);
   const [state, dispatch] = useReducer(reducer, initialState);
   const [isDetail, setIsDetail] = useState(false);
-
   const handleChange = (event) => {
     setIsDetail(event.target.checked);
   };
@@ -232,6 +173,7 @@ const BrandCreate = () => {
                   label="Ad"
                   fullWidth
                   size="small"
+                  autoComplete="off"
                   value={state.languages[lang].name}
                   onChange={(e) =>
                     dispatch({
@@ -266,9 +208,10 @@ const BrandCreate = () => {
                 startIcon={<AddAPhoto />}
               >
                 Dosya Seç
-                <VisuallyHiddenInput
+                <Input
                   type="file"
                   accept="image/*"
+                  sx={{ display: "none" }}
                   onChange={(e) =>
                     dispatch({
                       type: "UPDATE_IMAGE",
@@ -280,7 +223,7 @@ const BrandCreate = () => {
               {state.image && (
                 <div className="flex items-center gap-2">
                   <img
-                    src={URL.createObjectURL(categoryFormState.image)}
+                    src={URL.createObjectURL(state.image)}
                     alt="Yüklenen Resim"
                     className="h-16 object-cover rounded-md"
                   />
@@ -376,6 +319,7 @@ const BrandCreate = () => {
                       label="Sayfa Boyutu Seçenekleri"
                       type="string"
                       size="small"
+                      autoComplete="off"
                       value={state.pageSizeOptions}
                       onChange={(e) =>
                         dispatch({
@@ -401,6 +345,7 @@ const BrandCreate = () => {
                       label="Sayfa Boyutu"
                       type="number"
                       size="small"
+                      autoComplete="off"
                       value={state.pageSize}
                       onChange={(e) =>
                         dispatch({
@@ -478,6 +423,7 @@ const BrandCreate = () => {
                         type="number"
                         size="small"
                         name="startPrice"
+                        autoComplete="off"
                         value={state.startPrice}
                         onChange={(e) =>
                           dispatch({
@@ -500,6 +446,7 @@ const BrandCreate = () => {
                         type="number"
                         size="small"
                         name="endPrice"
+                        autoComplete="off"
                         value={state.endPrice}
                         onChange={(e) =>
                           dispatch({
@@ -526,6 +473,7 @@ const BrandCreate = () => {
                     label="Görüntüleme Sırası"
                     type="number"
                     size="small"
+                    autoComplete="off"
                     value={state.displayOrder}
                     onChange={(e) =>
                       dispatch({
@@ -628,7 +576,7 @@ const BrandCreate = () => {
                     })
                   }
                   size="small"
-                  options={companies}
+                  options={companiesData}
                   getOptionLabel={(option) => option}
                   renderTags={(tagValue, getTagProps) =>
                     tagValue.map((option, index) => {
@@ -708,6 +656,7 @@ const BrandCreate = () => {
                       variant="outlined"
                       size="small"
                       label="Arama motoru dostu sayfa adı"
+                      autoComplete="off"
                       required
                       fullWidth
                       value={state.languages[lang].searchEngineName}
@@ -734,6 +683,7 @@ const BrandCreate = () => {
                       variant="outlined"
                       size="small"
                       label="Meta başlığı"
+                      autoComplete="off"
                       required
                       fullWidth
                       value={state.languages[lang].metaTitle}
@@ -760,6 +710,7 @@ const BrandCreate = () => {
                       variant="outlined"
                       size="small"
                       label="Meta anahtar kelimeleri"
+                      autoComplete="off"
                       required
                       fullWidth
                       value={state.languages[lang].metaKeyWord}
@@ -786,6 +737,7 @@ const BrandCreate = () => {
                       variant="outlined"
                       size="small"
                       label="Meta açıklaması"
+                      autoComplete="off"
                       required
                       fullWidth
                       multiline

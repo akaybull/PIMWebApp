@@ -1,10 +1,11 @@
-import PageLayout from "../../components/PageLayout";
+import PageLayout from "../../../components/PageLayout";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Button,
   FormControl,
+  Input,
   InputLabel,
   MenuItem,
   Select,
@@ -19,11 +20,10 @@ import {
   FileUpload,
   Search,
 } from "@mui/icons-material";
-import CustomModal from "../../components/CustomModal";
-import CategoriesTable from "./CategoriesTable";
+import CustomModal from "../../../components/CustomModal";
 import CatagoryCreate from "./CatagoryCreate";
 import { useState } from "react";
-import { VisuallyHiddenInput } from "./Brands/BrandCreate";
+import CategoriesTable from "./CategoriesTable";
 
 const Categories = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -177,10 +177,11 @@ const Categories = () => {
                   startIcon={<CloudUpload />}
                 >
                   Dosya Seç
-                  <VisuallyHiddenInput
+                  <Input
+                    sx={{ display: "none" }}
+                    multiple
                     type="file"
                     onChange={(event) => setFiles(event.target.files)}
-                    multiple
                   />
                 </Button>
                 <Typography fontSize={"14px"}>{files[0]?.name}</Typography>

@@ -17,20 +17,23 @@ import {
   ListItemIcon,
   Avatar,
   Divider,
+  Stack,
 } from "@mui/material";
 import Sidebar from "./Sidebar";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../redux/features/authSlice";
 import { Logout, Menu, Settings } from "@mui/icons-material";
 import { toggleMobileMenu } from "../redux/features/settingsSlice";
+import { stringAvatar } from "../utils/stringAvatar";
 
 const PageLayout = ({ children, title }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [lang, setLang] = useState("tr");
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -94,12 +97,14 @@ const PageLayout = ({ children, title }) => {
             }}
           >
             <Box sx={{ textAlign: "center", py: 2 }}>
-              <Avatar sx={{ width: 80, height: 80, margin: "auto" }}>AB</Avatar>
+              <Stack direction="row" spacing={2} justifyContent="center">
+                <Avatar {...stringAvatar(user?.name + " " + user?.surname)} />
+              </Stack>
               <Typography variant="h6" sx={{ mt: 1 }}>
-                Akay Bul
+                {user?.name + " " + user?.surname}
               </Typography>
               <Typography variant="body2" color="textSecondary">
-                akaybul@saatvesaat.com
+                {user?.emailAddress}
               </Typography>
             </Box>
 

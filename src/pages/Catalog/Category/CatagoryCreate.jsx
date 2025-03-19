@@ -23,6 +23,7 @@ import {
   Divider,
   Autocomplete,
   Alert,
+  Input,
 } from "@mui/material";
 import { useState } from "react";
 import {
@@ -39,15 +40,14 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { CatalogData } from "./CatalogData";
 import {
-  companies,
+  companiesData,
   customerRolles,
   discounts,
   flags,
   formats,
   languages,
   modules,
-  VisuallyHiddenInput,
-} from "./Brands/BrandCreate";
+} from "../../../constant/constant";
 
 const CategoryCreate = () => {
   const theme = useTheme();
@@ -290,7 +290,8 @@ const CategoryCreate = () => {
                 startIcon={<AddAPhoto />}
               >
                 Dosya Seç
-                <VisuallyHiddenInput
+                <Input
+                  sx={{ display: "none" }}
                   type="file"
                   accept="image/*"
                   onChange={handleImageChange}
@@ -604,7 +605,7 @@ const CategoryCreate = () => {
                 value={categoryFormState.companies}
                 onChange={(event, newValue) => handleCompanyChange(newValue)}
                 size="small"
-                options={companies}
+                options={companiesData}
                 getOptionLabel={(option) => option}
                 renderTags={(tagValue, getTagProps) =>
                   tagValue.map((option, index) => {

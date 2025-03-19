@@ -1,4 +1,4 @@
-import PageLayout from "../../components/PageLayout";
+import PageLayout from "../../../components/PageLayout";
 import { Button } from "@mui/material";
 import { Delete, FileDownload, FileUpload } from "@mui/icons-material";
 
