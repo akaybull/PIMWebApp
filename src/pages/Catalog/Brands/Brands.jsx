@@ -9,7 +9,6 @@ import {
   Select,
   TextField,
   Typography,
-  styled,
 } from "@mui/material";
 import {
   Add,
@@ -18,31 +17,56 @@ import {
   FileUpload,
   Search,
 } from "@mui/icons-material";
-import CategoriesTable from "../CategoriesTable";
 import PageLayout from "../../../components/PageLayout";
-import { useNavigate } from "react-router-dom";
 import CustomModal from "../../../components/CustomModal";
-import { useState } from "react";
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { VisuallyHiddenInput } from "./BrandCreate";
+import { useSearchBrandQuery } from "../../../redux/apis/brandsApi";
+import { enqueueSnackbar } from "../../../redux/features/snackbarSlice";
+import { useDispatch } from "react-redux";
+import BrandsTable from "./BrandsTable";
+
 const Brands = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [brandName, setBrandName] = useState("");
   const [isPublished, setIsPublished] = useState(1);
+  const [searchParams, setSearchParams] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [files, setFiles] = useState([]);
 
-  const handlePublishedChange = (event) => {
-    setIsPublished(event.target.value);
+  const { data, error, isLoading } = useSearchBrandQuery(searchParams, {
+    skip: !searchParams.keyword,
+  });
+
+  const [tableData, setTableData] = useState([]);
+
+  const handleSearchBrand = (event) => {
+    event.preventDefault();
+    setSearchParams({ keyword: brandName });
   };
+
+  useEffect(() => {
+    if (data?.result) {
+      setTableData(data.result);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (error) {
+      dispatch(
+        enqueueSnackbar({
+          message:
+            error?.data?.error.message ||
+            error?.data?.message ||
+            "Bir hata oluştu",
+          severity: "error",
+          duration: 3000,
+        })
+      );
+    }
+  }, [error, dispatch]);
 
   return (
     <PageLayout title={"MARKALAR"}>
@@ -78,37 +102,41 @@ const Brands = () => {
             </div>
           </AccordionSummary>
           <AccordionDetails>
-            <div className="flex w-full gap-2">
+            <form className="flex w-full gap-2" onSubmit={handleSearchBrand}>
               <TextField
                 variant="outlined"
                 size="small"
                 label="Marka Adı"
                 className="w-1/2"
+                name="brandName"
+                value={brandName}
+                onChange={(e) => setBrandName(e.target.value)}
               />
               <FormControl className="w-1/2">
-                <InputLabel id="demo-simple-select-label">
-                  Yayınlandı
-                </InputLabel>
+                <InputLabel id="published-select-label">Yayınlandı</InputLabel>
                 <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
+                  labelId="published-select-label"
+                  id="published-select"
                   value={isPublished}
                   label="Yayınlandı"
-                  onChange={handlePublishedChange}
+                  onChange={(e) => setIsPublished(e.target.value)}
                   size="small"
+                  name="isPublished"
                 >
                   <MenuItem value={1}>Tümü</MenuItem>
                   <MenuItem value={2}>Sadece Yayınlananlar</MenuItem>
                   <MenuItem value={3}>Sadece Yayınlanmayanlar</MenuItem>
                 </Select>
               </FormControl>
-              <Button variant="contained" endIcon={<Search />}>
+              <Button variant="contained" endIcon={<Search />} type="submit">
                 Ara
               </Button>
-            </div>
+            </form>
           </AccordionDetails>
         </Accordion>
-        <CategoriesTable />
+        {tableData?.length > 0 && !isLoading && (
+          <BrandsTable tableData={tableData} />
+        )}
       </div>
       <CustomModal
         open={openModal}

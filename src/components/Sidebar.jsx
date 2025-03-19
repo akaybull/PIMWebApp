@@ -115,6 +115,7 @@ const Sidebar = () => {
           <Fragment key={item.text}>
             <ListItem
               to={item.path}
+              component={item.submenu ? undefined : NavLink}
               onClick={() =>
                 item.submenu
                   ? setOpenSubmenu((prev) =>
