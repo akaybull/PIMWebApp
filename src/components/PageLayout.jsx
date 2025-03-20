@@ -18,21 +18,65 @@ import {
   Avatar,
   Divider,
   Stack,
+  Breadcrumbs,
+  Link,
 } from "@mui/material";
 import Sidebar from "./Sidebar";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { logout } from "../redux/features/authSlice";
-import { Logout, Menu, Settings } from "@mui/icons-material";
+import {
+  Logout,
+  Menu,
+  Settings,
+  Dashboard,
+  Category,
+  BrandingWatermark,
+  ProductionQuantityLimits,
+  Label,
+} from "@mui/icons-material";
 import { toggleMobileMenu } from "../redux/features/settingsSlice";
 import { stringAvatar } from "../utils/stringAvatar";
+
+const menuItems = [
+  {
+    text: "Yönetim Paneli",
+    icon: <Dashboard />,
+    path: "/",
+  },
+  {
+    text: "Katalog",
+    icon: <Category />,
+    path: "/catalog",
+    submenu: [
+      { text: "Kategori", icon: <Category />, path: "/categories" },
+      { text: "Markalar", icon: <BrandingWatermark />, path: "/brands" },
+      {
+        text: "Ürünler",
+        icon: <ProductionQuantityLimits />,
+        path: "/products",
+      },
+      { text: "Ürün Etiketleri", icon: <Label />, path: "/product-tags" },
+    ],
+  },
+];
+
+const breadcrumbNames = {
+  "": "Anasayfa",
+  catalog: "Katalog",
+  categories: "Kategoriler",
+  brands: "Markalar",
+  products: "Ürünler",
+  "product-tags": "Ürün Etiketleri",
+};
 
 const PageLayout = ({ children, title }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const user = useSelector((state) => state.auth.user);
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [lang, setLang] = useState("tr");
@@ -47,9 +91,11 @@ const PageLayout = ({ children, title }) => {
     navigate("/login");
   };
 
+  const pathnames = location.pathname.split("/").filter((x) => x);
+
   return (
     <Box sx={{ display: "flex" }}>
-      <Sidebar />
+      <Sidebar menuItems={menuItems} />
       <Box
         component="main"
         sx={{
@@ -70,10 +116,35 @@ const PageLayout = ({ children, title }) => {
                 <Menu />
               </IconButton>
             )}
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              {title}
-            </Typography>
-
+            <Box sx={{ flexGrow: 1 }}>
+              <Typography variant="h6" component="div">
+                {title}
+              </Typography>
+              <Breadcrumbs aria-label="breadcrumb">
+                <Link
+                  underline="hover"
+                  color="inherit"
+                  onClick={() => navigate("/")}
+                  sx={{ cursor: "pointer" }}
+                >
+                  Anasayfa
+                </Link>
+                {pathnames.slice(0, -1).map((value, index) => {
+                  const to = `/${pathnames.slice(0, index + 1).join("/")}`;
+                  return (
+                    <Link
+                      key={to}
+                      underline="hover"
+                      color="inherit"
+                      onClick={() => navigate(to)}
+                      sx={{ cursor: "pointer" }}
+                    >
+                      {breadcrumbNames[value] || value}
+                    </Link>
+                  );
+                })}
+              </Breadcrumbs>
+            </Box>
             <IconButton
               color="inherit"
               onClick={() => toggleSettingsDrawer(true)}
@@ -141,22 +212,16 @@ const PageLayout = ({ children, title }) => {
               <Tooltip title="Çıkış Yap" placement="top">
                 <ListItem
                   onClick={handleLogout}
-                  sx={(theme) => ({
+                  sx={{
                     borderRadius: 1,
                     justifyContent: "flex-start",
                     transition: "all 0.2s",
                     "&:hover": {
                       cursor: "pointer",
-                      bgcolor:
-                        theme.palette.mode === "dark"
-                          ? "error.dark"
-                          : "error.light",
+                      bgcolor: theme.palette.error.main,
                       color: "common.white",
-                      "& .MuiListItemIcon-root": {
-                        color: "common.white",
-                      },
                     },
-                  })}
+                  }}
                 >
                   <ListItemIcon sx={{ minWidth: "auto" }}>
                     <Logout />

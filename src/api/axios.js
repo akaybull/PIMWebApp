@@ -1,6 +1,5 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { enqueueSnackbar } from "../redux/features/snackbarSlice";
 const baseURL = import.meta.env.VITE_BASE_URL;
 
 const axiosInstance = axios.create({
@@ -50,13 +49,7 @@ axiosInstance.interceptors.response.use(
           console.error("Too many requests. Please try again later.");
           break;
         case StatusCode.InternalServerError:
-          dispatch(
-            enqueueSnackbar({
-              message: err.error.details || err.error.message,
-              severity: "error",
-              duration: 3000,
-            })
-          );
+          console.error("Too many requests. Please try again later.");
           break;
         case StatusCode.NotFound:
           console.error("The resource was not found.");

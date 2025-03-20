@@ -24,7 +24,7 @@ function AppContent() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route
-            path="/dashboard"
+            path="/"
             element={
               <AuthGuard>
                 <Dashboard />

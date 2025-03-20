@@ -12,15 +12,7 @@ import {
   useMediaQuery,
   Collapse,
 } from "@mui/material";
-import {
-  Dashboard,
-  ChevronLeft,
-  ExpandMore,
-  ProductionQuantityLimits,
-  Category,
-  Label,
-  BrandingWatermark,
-} from "@mui/icons-material";
+import { ChevronLeft, ExpandMore } from "@mui/icons-material";
 import { NavLink } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,7 +20,7 @@ import { toggleMobileMenu } from "../redux/features/settingsSlice";
 
 const drawerWidth = 240;
 
-const Sidebar = () => {
+const Sidebar = ({ menuItems }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const isOpenMobileMenu = useSelector(
@@ -47,29 +39,6 @@ const Sidebar = () => {
     Cookies.set("isCollapsed", newCollapsedState, { expires: 30 });
     setIsCollapsed(newCollapsedState);
   };
-
-  const menuItems = [
-    {
-      text: "Yönetim Paneli",
-      icon: <Dashboard />,
-      path: "/dashboard",
-    },
-    {
-      text: "Katalog",
-      icon: <Category />,
-      path: "/catalog",
-      submenu: [
-        { text: "Kategori", icon: <Category />, path: "/categories" },
-        { text: "Markalar", icon: <BrandingWatermark />, path: "/brands" },
-        {
-          text: "Ürünler",
-          icon: <ProductionQuantityLimits />,
-          path: "/products",
-        },
-        { text: "Ürün Etiketleri", icon: <Label />, path: "/product-tags" },
-      ],
-    },
-  ];
 
   const drawerContent = (
     <Box
@@ -90,9 +59,7 @@ const Sidebar = () => {
       >
         {!isCollapsed && (
           <img
-            src={
-              "https://testteknik.saatbayi.com/assets/saatteknik-logo-DIJS7vep.png"
-            }
+            src="/logo.png"
             alt="Saat Teknik Logo"
             style={{ maxWidth: "100%", height: "auto" }}
           />
