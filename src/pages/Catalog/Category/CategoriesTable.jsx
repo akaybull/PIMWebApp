@@ -6,81 +6,33 @@ import {
   GridToolbarFilterButton,
 } from "@mui/x-data-grid";
 import * as XLSX from "xlsx";
-import { Delete, FileDownload, Save, Search } from "@mui/icons-material";
+import { Edit, FileDownload, Search } from "@mui/icons-material";
 import { Box, Button, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useSearchCategoryQuery } from "../../../redux/apis/categoriesApi";
 
 const columns = [
-  { field: "categoryName", headerName: "Ad", editable: true, flex: 1 },
+  { field: "breadCrumbs", headerName: "Ad", editable: false, flex: 1 },
   {
-    field: "Published",
-    headerName: "Yayınlandı",
-    type: "boolean",
-    editable: true,
-    width: 120,
-  },
-  {
-    field: "DisplayOrder",
-    headerName: "Görüntüleme Sırası",
-    type: "number",
-    editable: true,
-    width: 150,
-  },
-  {
-    field: "save",
-    headerName: "Kaydet",
+    field: "edit",
+    headerName: "Düzenle",
     width: 100,
-    renderCell: (params) => (
-      <Save
-        onClick={() => handleSave(params.row.id)}
-        style={{ cursor: "pointer" }}
-      />
-    ),
-  },
-  {
-    field: "delete",
-    headerName: "Sil",
-    width: 100,
-    renderCell: (params) => (
-      <Delete
-        onClick={() => handleDelete(params.row.id)}
-        style={{ cursor: "pointer" }}
-      />
-    ),
+    renderCell: (params) => <Edit style={{ cursor: "pointer" }} />,
   },
 ];
 
 export default function CategoriesTable() {
   const [keyword, setKeyword] = useState("");
+  const [rows, setRows] = useState([]);
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
-    pageSize: 10,
+    pageSize: 5,
   });
-
   const [searchParams, setSearchParams] = useState({
     Keyword: "",
     SkipCount: 0,
-    MaxResultCount: 10,
+    MaxResultCount: paginationModel.pageSize,
   });
-
-  const { data, error, isLoading, refetch } =
-    useSearchCategoryQuery(searchParams);
-
-  const [rows, setRows] = useState([]);
-
-  useEffect(() => {
-    if (data?.result?.result) {
-      setRows(
-        data.result.result.map((item) => ({
-          id: item.categoryId,
-          categoryName: item.categoryName,
-          Published: item.Published || false,
-          DisplayOrder: item.DisplayOrder || 0,
-        }))
-      );
-    }
-  }, [data]);
 
   useEffect(() => {
     setSearchParams((prev) => ({
@@ -90,21 +42,40 @@ export default function CategoriesTable() {
     }));
   }, [paginationModel]);
 
+  const { data, error, isLoading } = useSearchCategoryQuery(searchParams);
+
+  useEffect(() => {
+    if (data?.result?.result) {
+      setRows(
+        data.result.result.items.map((item) => ({
+          id: item.categoryId,
+          breadCrumbs: item.breadCrumbs,
+          coreId: item.coreId,
+          parentId: item.parentId,
+          categoryName: item.categoryName,
+          language: item.language,
+        }))
+      );
+    } else {
+      setRows([]);
+    }
+  }, [data, error]);
+
   const handleExportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(rows);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Kategoriler");
-    XLSX.writeFile(workbook, "categories.xlsx");
+    XLSX.writeFile(workbook, "Kategoriler.xlsx");
   };
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
     setSearchParams((prev) => ({
       ...prev,
       Keyword: keyword,
-      SkipCount: 0, // Yeni aramada ilk sayfadan başlamalı
+      SkipCount: 0,
     }));
-    setPaginationModel((prev) => ({ ...prev, page: 0 })); // Sayfayı sıfırla
-    refetch();
+    setPaginationModel({ page: 0, pageSize: paginationModel.pageSize }); // Aramada ilk sayfaya dön
   };
 
   const CustomToolbar = () => (
@@ -125,7 +96,7 @@ export default function CategoriesTable() {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <div className="flex w-full gap-2 mb-4">
+      <form onSubmit={handleSearch} className="flex w-full gap-2 mb-4">
         <TextField
           variant="outlined"
           size="small"
@@ -134,10 +105,10 @@ export default function CategoriesTable() {
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
         />
-        <Button variant="contained" endIcon={<Search />} onClick={handleSearch}>
+        <Button variant="contained" endIcon={<Search />} type="submit">
           Ara
         </Button>
-      </div>
+      </form>
       {isLoading ? (
         <p>Yükleniyor...</p>
       ) : error ? (
@@ -148,9 +119,6 @@ export default function CategoriesTable() {
           columns={columns}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
-          initialState={{
-            pagination: { paginationModel: { pageSize: 10 } },
-          }}
           slots={{ toolbar: CustomToolbar }}
           pageSizeOptions={[5, 10, 25, 50, 100]}
           checkboxSelection

@@ -7,7 +7,6 @@ export const categoriesApi = createApi({
   endpoints: (builder) => ({
     searchCategory: builder.query({
       query: ({ Keyword, SkipCount, MaxResultCount, NumberCode }) => {
-        // Boş olan parametreleri kaldır
         const params = {};
         if (Keyword) params.Keyword = Keyword;
         if (SkipCount !== undefined) params.SkipCount = SkipCount;
@@ -22,7 +21,16 @@ export const categoriesApi = createApi({
         };
       },
     }),
+
+    createCategory: builder.mutation({
+      query: (newCategory) => ({
+        url: "services/app/Category/CreateCategory",
+        method: "POST",
+        body: newCategory,
+      }),
+    }),
   }),
 });
 
-export const { useSearchCategoryQuery } = categoriesApi;
+export const { useSearchCategoryQuery, useCreateCategoryMutation } =
+  categoriesApi;

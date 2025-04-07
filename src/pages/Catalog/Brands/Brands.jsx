@@ -23,13 +23,10 @@ import CustomModal from "../../../components/CustomModal";
 import { useNavigate } from "react-router-dom";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchBrandQuery } from "../../../redux/apis/brandsApi";
-import { enqueueSnackbar } from "../../../redux/features/snackbarSlice";
-import { useDispatch } from "react-redux";
 import BrandsTable from "./BrandsTable";
 
 const Brands = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [brandName, setBrandName] = useState("");
   const [isPublished, setIsPublished] = useState(1);
   const [searchParams, setSearchParams] = useState({});
@@ -52,21 +49,6 @@ const Brands = () => {
       setTableData(data.result);
     }
   }, [data]);
-
-  useEffect(() => {
-    if (error) {
-      dispatch(
-        enqueueSnackbar({
-          message:
-            error?.data?.error.message ||
-            error?.data?.message ||
-            "Bir hata oluştu",
-          severity: "error",
-          duration: 3000,
-        })
-      );
-    }
-  }, [error, dispatch]);
 
   return (
     <Suspense fallback={<div>Loading...</div>}>

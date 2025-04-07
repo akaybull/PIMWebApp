@@ -10,6 +10,9 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Login = lazy(() => import("./pages/Login"));
 const Products = lazy(() => import("./pages/Catalog/Products/Products"));
 const Categories = lazy(() => import("./pages/Catalog/Category/Categories"));
+const CatagoryCreate = lazy(() =>
+  import("./pages/Catalog/Category/CatagoryCreate")
+);
 const ProductTags = lazy(() =>
   import("./pages/Catalog/ProductTags/ProductTags")
 );
@@ -60,6 +63,14 @@ function AppContent() {
             element={
               <AuthGuard>
                 <Categories />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/categories/create"
+            element={
+              <AuthGuard>
+                <CatagoryCreate />
               </AuthGuard>
             }
           />

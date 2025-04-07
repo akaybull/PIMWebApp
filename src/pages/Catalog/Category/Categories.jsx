@@ -1,28 +1,15 @@
 import { useState } from "react";
-import { useSearchCategoryQuery } from "../../../redux/apis/categoriesApi";
 import PageLayout from "../../../components/PageLayout";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Button,
-  Input,
-  TextField,
-  Typography,
-} from "@mui/material";
-import {
-  Add,
-  CloudUpload,
-  Delete,
-  ExpandMore,
-  FileUpload,
-  Search,
-} from "@mui/icons-material";
+import { Button, Input, Typography } from "@mui/material";
+import { Add, CloudUpload, Delete, FileUpload } from "@mui/icons-material";
 import CustomModal from "../../../components/CustomModal";
 import CatagoryCreate from "./CatagoryCreate";
 import CategoriesTable from "./CategoriesTable";
+import { useNavigate } from "react-router-dom";
 
 const Categories = () => {
+  const navigate = useNavigate();
+
   const [openModal, setOpenModal] = useState(false);
   const [deleteOpenModal, setDeleteOpenModal] = useState(false);
   const [createOpenModal, setCreateOpenModal] = useState(false);
@@ -35,7 +22,7 @@ const Categories = () => {
           <Button
             startIcon={<Add />}
             variant="contained"
-            onClick={() => setCreateOpenModal(true)}
+            onClick={() => navigate("/categories/create")}
           >
             Yeni Ekle
           </Button>
